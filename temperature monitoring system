@@ -1,0 +1,149 @@
+A temperature monitoring system enables real-time tracking of temperature variations, which is essential in various applications such as environmental monitoring, industrial processes, and smart home systems. By integrating sensors with microcontrollers and employing appropriate programming, you can create an efficient temperature monitoring solution. Below is a guide on building a temperature monitoring system using Arduino, including hardware setup, code, and explanations.​
+
+Components Needed:
+
+    Arduino UNO: Serves as the central microcontroller for the system.​
+
+    DHT22 Temperature and Humidity Sensor: Measures temperature and humidity levels.​
+    Itsourcecode.com
+
+    16x2 LCD Display with I2C Interface: Displays temperature and humidity readings.​
+
+    Jumper Wires: For making necessary connections between components.​
+
+Hardware Connections:
+
+    DHT22 Sensor to Arduino:
+
+        VCC: Connect to the 5V pin on the Arduino.​
+
+        GND: Connect to the GND pin on the Arduino.​
+
+        DATA: Connect to digital pin 2 on the Arduino.​
+
+    LCD Display to Arduino:
+
+        GND: Connect to the GND pin on the Arduino.​
+
+        VCC: Connect to the 5V pin on the Arduino.​
+
+        SDA: Connect to A4 (SDA) pin on the Arduino.​
+
+        SCL: Connect to A5 (SCL) pin on the Arduino.​
+
+Arduino Code:
+
+#include <DHT.h>
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+// Define sensor and LCD settings
+#define DHTPIN 2         // Pin connected to the DHT22 data pin
+#define DHTTYPE DHT22   // Define sensor type as DHT22
+DHT dht(DHTPIN, DHTTYPE); // Initialize DHT sensor
+
+LiquidCrystal_I2C lcd(0x27, 16, 2); // Initialize LCD with I2C address 0x27
+
+void setup() {
+  Serial.begin(9600);     // Start serial communication at 9600 baud rate
+  dht.begin();           // Initialize the DHT sensor
+  lcd.begin(16, 2);      // Initialize the LCD
+  lcd.backlight();      // Turn on the LCD backlight
+}
+
+void loop() {
+  delay(2000); // Wait for 2 seconds between readings
+
+  // Read humidity and temperature values
+  float h = dht.readHumidity();
+  float t = dht.readTemperature(); // Temperature in Celsius
+
+  // Check if any readings failed and exit early
+  if (isnan(h) || isnan(t)) {
+    Serial.println("Failed to read from DHT sensor!");
+    return;
+  }
+
+  // Display readings on the LCD
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Temp: ");
+  lcd.print(t);
+  lcd.print(" C");
+  lcd.setCursor(0, 1);
+  lcd.print("Humidity: ");
+  lcd.print(h);
+  lcd.print(" %");
+
+  // Print readings to the serial monitor
+  Serial.print("Temperature: ");
+  Serial.print(t);
+  Serial.print(" °C\t");
+  Serial.print("Humidity: ");
+  Serial.print(h);
+  Serial.println(" %");
+}
+
+Code Explanation:
+
+    Library Inclusions:
+
+        #include <DHT.h>: Includes the DHT sensor library for interfacing with the DHT22 sensor.​
+        CodingTechRoom+3peerdh.com+3Itsourcecode.com+3
+
+        #include <Wire.h>: Includes the Wire library for I2C communication.​
+        Itsourcecode.com
+
+        #include <LiquidCrystal_I2C.h>: Includes the LCD library for controlling the LCD display over I2C.​
+
+    Sensor and LCD Initialization:
+
+        #define DHTPIN 2: Sets digital pin 2 as the data pin for the DHT22 sensor.​
+        Itsourcecode.com+2Itsourcecode.com+2peerdh.com+2
+
+        #define DHTTYPE DHT22: Specifies the sensor type as DHT22.​
+        Itsourcecode.com+2peerdh.com+2Itsourcecode.com+2
+
+        DHT dht(DHTPIN, DHTTYPE);: Creates a DHT object to interact with the sensor.​
+        Itsourcecode.com+1Itsourcecode.com+1
+
+        LiquidCrystal_I2C lcd(0x27, 16, 2);: Initializes the LCD with the I2C address 0x27 and a 16x2 character display.​
+        Itsourcecode.com
+
+    Setup Function:
+
+        Serial.begin(9600);: Begins serial communication at a baud rate of 9600.​
+
+        dht.begin();: Initializes the DHT sensor.​
+        peerdh.com
+
+        lcd.begin(16, 2);: Initializes the LCD display with 16 columns and 2 rows.​
+        Itsourcecode.com
+
+        lcd.backlight();: Turns on the LCD backlight for visibility.​
+
+    Loop Function:
+
+        delay(2000);: Pauses the program for 2 seconds between sensor readings.​
+        peerdh.com
+
+        float h = dht.readHumidity();: Reads the humidity value from the sensor.​
+
+        float t = dht.readTemperature();: Reads the temperature value in Celsius from the sensor.​
+
+        if (isnan(h) || isnan(t)) { ... }: Checks if the sensor readings are valid; if not, it prints an error message and exits the loop.​
+
+        lcd.clear();: Clears the LCD screen for fresh data display.​
+        Itsourcecode.com
+
+        lcd.setCursor(0, 0);: Sets the cursor to the first row of the LCD.​
+        Itsourcecode.com
+
+        lcd.print("Temp: "); lcd.print(t); lcd.print(" C");: Displays the temperature on the LCD.​
+        Itsourcecode.com
+
+        lcd.setCursor(0, 1);: Sets the cursor to the second row of the LCD.​
+
+        lcd.print("Humidity: "); lcd.print(h); lcd.print(" %");: Displays the humidity on the
+
+
